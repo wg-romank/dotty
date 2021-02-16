@@ -22,7 +22,7 @@ case class SectionInput(
   private val driver = new InteractiveDriver(
     List(
       "-color:never",
-      // "-classpath", context.settings.classpath
+       "-classpath", System.getProperty("java.class.path")
       )
     )
   private val wrapIdent = " " * 2

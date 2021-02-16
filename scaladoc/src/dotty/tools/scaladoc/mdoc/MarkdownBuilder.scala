@@ -15,7 +15,7 @@ import java.nio.file.Paths
 
 object MarkdownBuilder {
 
-  def default(): MarkdownCompiler = fromClasspath(classpath = "", scalacOptions = "")
+  def default(): MarkdownCompiler = fromClasspath(classpath = System.getProperty("java.class.path"), scalacOptions = "")
 
   def buildDocument(
       compiler: MarkdownCompiler,
