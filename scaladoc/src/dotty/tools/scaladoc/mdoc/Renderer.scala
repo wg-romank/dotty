@@ -113,30 +113,29 @@ object Renderer {
   ): String = {
     val baos = new ByteArrayOutputStream()
     val sb = new PrintStream(baos)
-    // val stats = section.source.stats.lift
-    // val input = section.source.pos.input
-    // val totalStats = section.source.stats.length
-    // if (section.mod.isFailOrWarn) {
-    //   sb.print(section.input.text)
-    // }
-    section.section.statements/*.zip(section.source.stats)*/.zipWithIndex.foreach {
-      case (statement, statementIndex) =>
-        // val pos = tree.pos
-        // val leadingStart = stats(statementIndex - 1) match {
-        //   case None =>
-        //     0
-        //   case Some(previousStatement) =>
-        //     previousStatement.pos.end
+    val statsWithSourcePos = section.statsWithSourcePos
+    val input = section.sourcePos.linesSlice.mkString
+    val totalStats = section.stats.length
+    if (/*section.mod.isFailOrWarn*/false) {
+      sb.print(section.input)
+    }
+    section.section.statements.zip(section.statsWithSourcePos).zipWithIndex.foreach {
+      case ((statement, (tree, sourcePos)), statementIndex) =>
+        val pos = sourcePos
+        //Source code has default indent due to body wrapping
+        // val leadingTrivia = if statementIndex == 0 then "" else input.slice(
+        //   statsWithSourcePos(statementIndex - 1)(1).end,
+        //   pos.start
+        // ).stripPrefix(" " * 2)
+        // println(leadingTrivia)
+
+        // if (/*!section.mod.isFailOrWarn*/true) {
+        //   sb.append(leadingTrivia)
         // }
-        // val leadingTrivia = Position.Range(input, leadingStart, pos.start)
-        // if (!section.mod.isFailOrWarn) {
-        //   sb.append(leadingTrivia.text)
-        // }
-        // val endOfLinePosition =
-        //   Position.Range(pos.input, pos.startLine, pos.startColumn, pos.endLine, Int.MaxValue)
-        // if (!section.mod.isFailOrWarn) {
-        //   sb.append(endOfLinePosition.text)
-        // }
+        val statementTxt = sourcePos.linesSlice.mkString.stripSuffix("\n").stripPrefix(" " * 2)
+        if (/*!section.mod.isFailOrWarn*/true) {
+          sb.append(statementTxt)
+        }
         if (statement.out.nonEmpty) {
           sb.append("\n")
           appendFreshMultiline(sb, statement.out)
@@ -194,6 +193,7 @@ object Renderer {
               sb.append(printer(variable))
           }
         }
+      sb.append("\n")
     }
     baos.toString.trim
   }

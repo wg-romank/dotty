@@ -14,7 +14,7 @@ object EvaluatedDocument {
     EvaluatedDocument(
       instrumented,
       document.sections.zip(trees).map { case (a, b) =>
-        EvaluatedSection(a, b.input, b.source, b.mod)
+        EvaluatedSection(a, b.input, b.source, b.stats, b.mod)(b.ctx)
       }
     )
   }

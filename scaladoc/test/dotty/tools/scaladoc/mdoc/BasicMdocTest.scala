@@ -8,7 +8,7 @@ class BasicMdocTest:
   def testSectionInput() = {
       val input = Input(
         "test",
-        "1+1"
+        "1+1\n"+"2+2\n"+"case class B(val a: String)\n"+"val a = B(\"asd\")\n"+"println(a.a)\n"
       )
       val sectionInput = SectionInput(input, Modifier.Default())
       val instrumenter = Instrumenter.instrument(input, List(sectionInput))
